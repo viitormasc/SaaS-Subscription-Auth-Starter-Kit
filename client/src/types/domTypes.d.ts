@@ -1,0 +1,5 @@
+
+
+interface EventTarget {
+  checked:boolean
+}
