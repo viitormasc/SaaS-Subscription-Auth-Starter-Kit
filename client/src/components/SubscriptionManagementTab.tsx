@@ -66,15 +66,8 @@ export default function SubscriptionManagementTab() {
   };
 
   const handleUpgradeClick = (planName: string, isAnnual: boolean) => {
-    const currentPlan = subscription?.plan;
 
-    if (currentPlan && currentPlan !== 'free') {
-      // For paid users, redirect to manage subscription for upgrades
-      window.location.href = '/manage-subscription/update';
-    } else {
-      // For free users, use the normal plan selection
-      handlePlanSelect(planName, isAnnual);
-    }
+    handlePlanSelect(planName, isAnnual);
   };
 
   if (isLoading) {
@@ -305,3 +298,4 @@ export default function SubscriptionManagementTab() {
     </div>
   );
 }
+
