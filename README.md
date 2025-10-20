@@ -2,6 +2,11 @@
 
 > **A production-ready SaaS starter kit with authentication, payments, and email integration. Focus on building your product, not the infrastructure.**
 
+## 🎥 Demo Video
+
+
+
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -60,16 +65,6 @@ This is a **production-ready SaaS starter kit** designed to help developers laun
 - Your custom UI/UX on top of the foundation
 
 ---
-
-## 🎥 Demo Video
-
-<video src="video/Demo-auth.mp4" width="320" height="240" controls></video>
-
----
-
-## 🌐 Live Demo
-
-[🔗 Try Live Preview](#) *(Coming soon)*
 
 ## ✨ Features
 
