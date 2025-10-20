@@ -63,7 +63,7 @@ This is a **production-ready SaaS starter kit** designed to help developers laun
 
 ## 🎥 Demo Video
 
-[🎬 Watch Demo Video](#) *(Coming soon)*
+<video src="video/Demo-auth.mp4" width="320" height="240" controls></video>
 
 ---
 
