@@ -4,9 +4,9 @@ content-type: application/json
 
 {
   "email":"vitor9@gmail.com",
-  "password":"Vitor@123",
+  "password":"YourPassword@123",
   "name": "Vitor Mascarenhas",
-  "confirmPassword": "Vitor@123"
+  "confirmPassword": "YourPassword@123"
 }
 
 
@@ -16,10 +16,10 @@ POST http://localhost:2121/api/auth/sendValidationCodeEmail HTTP/1.1
 content-type: application/json
 
 {
-  "email":"viitormasc@gmail.com",
-  "password":"Vitor@123",
+  "email":"vitor9@gmail.com",
+  "password":"YourPassword@123",
   "name": "Vitor Mascarenhas",
-  "confirmPassword": "Vitor@123"
+  "confirmPassword": "YourPassword@123"
 }
 
 ###
@@ -28,7 +28,7 @@ GET http://localhost:2121/api/auth/checkValidationCodeEmail HTTP/1.1
 content-type: application/json
 
 {
-  "email":"viitormasc@gmail.com",
+  "email":"vitor9@gmail.com",
   "validationCode": "7816"
 }
 
@@ -40,8 +40,8 @@ POST http://localhost:2121/api/auth/login HTTP/1.1
 content-type: application/json
 
 {
-  "email":"viitormasc@gmail.com",
-  "password":"Vitor@123"
+  "email":"vitor9@gmail.com",
+  "password":"YourPassword@123"
 }
 
 ###
@@ -56,8 +56,8 @@ content-type: application/json
 
 {
   "userId":"68dda0ebb1bde19db7c6981e",
-  "newPassword":"Vitor@123",
-  "confirmPassword":"Vitor@123"
+  "newPassword":"NewPassword@123",
+  "confirmPassword":"NewPassword@123"
 }
 
 
@@ -66,96 +66,3 @@ content-type: application/json
 GET http://localhost:2121/api/auth/me HTTP/1.1
 content-type: application/json
 
-
-###
-// get all categories from a user
-GET http://localhost:2121/api/categories/getAllCategories HTTP/1.1
-content-type: application/json
-
-
-###
-
-// Create category 
-POST http://localhost:2121/api/categories/createCategory HTTP/1.1
-content-type: application/json
-
-{
-  "name": "Estudos artesanais",
-  "dailyGoalMinutes": "120",
-  "color": "#00FF00"
-}
-
-
-###
-
-// Get all categories for a user
-GET http://localhost:2121/api/categories/getAllCategories HTTP/1.1
-content-type: application/json
-
-
-###
-
-// Update category 
-PUT http://localhost:2121/api/categories/updateCategory/68a47fcacac19677ffac62b7 HTTP/1.1
-content-type: application/json
-
-{
-  "name": "Estudos universais",
-  "dailyGoalMinutes": "200",
-  "color": "#2743a7ff"
-}
-
-
-###
-
-// Toggle archived category 
-PUT http://localhost:2121/api/categories/archiveCategory/68a47fcacac19677ffac62b7 HTTP/1.1
-content-type: application/json
-
-
-
-###
-
-// Start timer
-POST http://localhost:2121/api/studyTracker/startTimer/68b600249072ed7607cb04a2 HTTP/1.1
-content-type: application/json
-
-
-###
-
-// Update time
-PUT http://localhost:2121/api/studyTracker/updateTimer/68a605a9dc1ba667753aff3e HTTP/1.1
-content-type: application/json
-
-{
-  "totalStudyTimeSec" : "120",
-  "isRunning":"false"
-}
-
-###
-// Get timer
-GET http://localhost:2121/api/studyTracker/getTimer/68dfb8e8f63c4a2d13adf980 HTTP/1.1
-content-type: application/json
-
-
-###
-
-// Get all timers from a user
-GET http://localhost:2121/api/studyTracker/getAllTimersfromUser HTTP/1.1
-content-type: application/json
-
-###
-
-
-
-// Stop all timers
-PUT http://localhost:2121/api/studyTracker/stopAllTimers HTTP/1.1
-content-type: application/json
-
-###
-
-
-
-// Stop all timers
-GET http://localhost:2121/api/dashboard/getCurrentStreak HTTP/1.1
-content-type: application/json
