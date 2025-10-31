@@ -1,8 +1,8 @@
-# 🚀 Full Stack SaaS Starter Kit
+#  Full Stack SaaS Starter Kit
 
-> **A production-ready SaaS starter kit with authentication, payments, and email integration. Focus on building your product, not the infrastructure.**
+> **A production-ready SaaS starter kit with authentication(google and local),subscription payments (stripe), and email integration(to recovery account, change passwords and confirm real account), google recaptcha and much more! Focus on building your product, and use this repo to make a faster app ready for prod!**
 
-## 🎥 Demo Video
+##  Demo Video
 
 https://youtu.be/Hf3J6HceH1o
 
@@ -29,7 +29,6 @@ https://youtu.be/Hf3J6HceH1o
 - [Contributing](#contributing)
 - [License](#license)
 
----
 
 ## 🎯 Overview
 
@@ -39,15 +38,16 @@ This is a **production-ready SaaS starter kit** designed to help developers laun
 ✅ **Password Management** (Recovery & Change Password)  
 ✅ **Email Integration** (AWS SES, Mailgun, or Nodemailer)  
 ✅ **Payment Processing** (Stripe Subscriptions)  
-✅ **Security** (Google reCAPTCHA v3, Rate Limiting)  
+✅ **Security** (Google reCAPTCHA v3, Rate Limiting,csrf)  
 ✅ **Type-Safe** (100% TypeScript)  
 ✅ **Modern UI** (React 19, Tailwind CSS, shadcn/ui)
+✅ **Caching api results** (uses react query to cache the results giving better performance to your app) 
 
 **This is NOT a tutorial.** This is a **starter kit** that you can clone and build upon. All the boring infrastructure work is done – you can focus on your unique product features.
 
 ### What This Starter Kit Provides
 
-🎁 **Out of the box:**
+ **Out of the box:**
 - User registration with email verification
 - Login with email/password or Google OAuth
 - Forgot password & password reset flow
@@ -58,13 +58,13 @@ This is a **production-ready SaaS starter kit** designed to help developers laun
 - RESTful API following best practices
 - Security headers and CORS configuration
 - Bot protection with reCAPTCHA v3
+- CSRF protection to you requisitions
 
 🛠️ **What you need to build:**
 - Your unique application features
 - Your business logic
 - Your custom UI/UX on top of the foundation
 
----
 
 ## ✨ Features
 
@@ -106,7 +106,6 @@ This is a **production-ready SaaS starter kit** designed to help developers laun
 - **MongoDB**: Document database with Mongoose ODM
 - **TypeScript**: Type-safe API development
 - **RESTful API**: Standard HTTP methods and status codes
----
 
 ## 🛠️ Tech Stack
 
@@ -141,6 +140,8 @@ Before you begin, ensure you have the following installed:
 - **npm** >= 9.0.0 (comes with Node.js)
 - **Git** ([Download](https://git-scm.com/))
 - **MongoDB** account ([MongoDB Atlas](https://www.mongodb.com/cloud/atlas) - free tier available)
+- **Stripe cli 1.3.1** 
+
 
 ### Required Services (Free Tiers Available)
 
@@ -155,7 +156,6 @@ You'll need accounts for these services:
    - **Mailgun** (Production) - [Sign up](https://www.mailgun.com/)
    - **Gmail/SMTP** (Development only) - Use your Gmail account
 
----
 
 ## 🚀 Installation
 
@@ -178,7 +178,6 @@ npm run install:all
 
 This will install dependencies for both the client and server using npm workspaces.
 
----
 
 ## ⚙️ Environment Configuration
 
@@ -257,6 +256,13 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 # Google reCAPTCHA v3 (Frontend Site Key)
 VITE_RECAPTCHA_SITE_KEY=your-recaptcha-site-key
 ```
+## Stripe webhook setup:
+
+Open a terminal and run : 
+```env
+stripe listen --forward-to http://localhost:2121(or your backend port)/webhook
+```
+
 ## 📧 Email Service Setup
 
 You must choose **ONE** email provider. For development, you can use Nodemailer (Gmail). For production, use AWS SES or Mailgun.
@@ -300,8 +306,6 @@ const transporter = nodemailer.createTransport({
 - Max 500 emails/day
 - Not recommended for production
 - May be marked as spam
-
----
 
 ### Option 2: AWS SES (Production - Recommended)
 
@@ -358,8 +362,6 @@ WEBSITE_DOMAIN=yourdomain.com
 - Max 200 emails/day
 - Max 1 email/second
 - Can only send to verified addresses
-
----
 
 ### Option 3: Mailgun (Production - Alternative)
 
@@ -664,7 +666,7 @@ scoop install stripe
 #### Forward Webhooks to Localhost:
 
 ```bash
-stripe listen --forward-to localhost:2121/api/webhooks/stripe
+stripe listen --forward-to localhost:2121/api/webhooks/
 ```
 
 This will output a webhook signing secret like:

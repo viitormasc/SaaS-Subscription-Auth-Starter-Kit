@@ -58,6 +58,7 @@ app.use(cookieParser())
 app.use(limiter);
 app.use(morgan('short'))
 app.use(helmet())
+//If you want to disable the csrf to test your app with postman or any other api call other than the website just comment theses 2 middlewares to disable csrf
 app.use(csrf({ cookie: { httpOnly: true, sameSite: 'strict' } }))
 app.use((req, res, next) => {
   res.cookie('XSRF-TOKEN', req.csrfToken())
