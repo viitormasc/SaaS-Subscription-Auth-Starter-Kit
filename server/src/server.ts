@@ -1,12 +1,14 @@
 import flash from 'connect-flash';
 import MongoStore from 'connect-mongo';
+import cookieParser from 'cookie-parser';
 import cors, { CorsOptions } from 'cors';
+import csrf from 'csurf';
 import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import session from 'express-session';
 import helmet from 'helmet';
-import methodOverride from 'method-override';
+import morgan from 'morgan';
 import passport from 'passport';
 import configurePassport from './config/passport';
 import connectDB from './database/database';
@@ -36,20 +38,32 @@ const corsOptions: CorsOptions = {
 };
 
 const limiter = rateLimit({
-  windowMs: 1000 * 60 * 120,
-  max: 1000,
-});
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  limit: 400, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+  // keyGenerator: (req, res) => ipKeyGenerator(req.ip as string)
+})
+
 app.use(limiter);
 // this route need to come before express.json() because it uses raw data not json()
+app.use('/webhook', express.raw({ type: 'application/json' }))
 app.use('/webhook', stripeWebhookRoute)
 
 app.use(cors(corsOptions));
 
 
-app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
-app.use(express.json());
-app.use(methodOverride('_method'));
+app.use(cookieParser())
+app.use(limiter);
+app.use(morgan('short'))
+app.use(helmet())
+app.use(csrf({ cookie: { httpOnly: true, sameSite: 'strict' } }))
+app.use((req, res, next) => {
+  res.cookie('XSRF-TOKEN', req.csrfToken())
+  next()
+})
+
 
 app.use(
   session({

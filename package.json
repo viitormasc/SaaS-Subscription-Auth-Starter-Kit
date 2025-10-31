@@ -6,7 +6,7 @@
   "scripts": {
     "client": "npm run dev --workspace=client",
     "server": "npm run dev --workspace=server",
-    "dev" : "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "dev": "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
     "build": "npm run build --workspaces",
     "build:client": "npm run build --workspace=client",
     "build:server": "npm run build --workspace=server",
@@ -32,6 +32,9 @@
   "license": "MIT",
   "author": "Vitor Mascarenhas",
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.51.0"
+    "@dotenvx/dotenvx": "^1.51.0",
+    "@types/csurf": "^1.11.5",
+    "csurf": "^1.11.0",
+    "morgan": "^1.10.1"
   }
 }
