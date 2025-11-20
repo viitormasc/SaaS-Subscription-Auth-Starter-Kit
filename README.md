@@ -7,7 +7,7 @@
 https://youtu.be/Hf3J6HceH1o
 
 
-![Print from app](https://github.com/viitormasc/SaaS-Subscription-Auth-Starter-Kit/tree/main/print1.png?raw=true)
+![Print from app](https://github.com/viitormasc/SaaS-Subscription-Auth-Starter-Kit/blob/main/video/print1.png?raw=true)
 
 
 ## 📋 Table of Contents
