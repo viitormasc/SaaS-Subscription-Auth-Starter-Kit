@@ -3,13 +3,27 @@ import { createContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'dark',
-  checked: false
+  checked: false,
 });
 
 export default ThemeContext;
 
 export const ThemeProvider = ({ children }: ChildrenProps) => {
-  const savedTheme = localStorage.getItem('theme') ?? 'dark';
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 768;
+  const initialColorTheme = isMobile ? 'light' : 'dark';
+  const savedTheme = localStorage.getItem('theme') ?? initialColorTheme;
   const [theme, setTheme] = useState(savedTheme); // Initial theme
   const [checked, setChecked] = useState(false);
   // Optional: Load theme from localStorage on mount

@@ -1,13 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { useSubscription } from '@/hooks/useSubscription';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Clock, Download, Mail, Zap } from 'lucide-react';
 import Spinner from '@/components/Spinner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useSubscription } from '@/hooks/useSubscription';
+import { formatDateToText } from '@/utils/time';
+import { CheckCircle, Clock } from 'lucide-react';
 
 export default function SuccessPaymentPage() {
-  const {subscription,handleManageSubscription, isLoading} = useSubscription();
-  if(isLoading) return <Spinner open/>
-   return (
+  const { subscription, handleManageSubscription, isLoading } = useSubscription();
+  if (isLoading) return <Spinner open />
+  return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Success Header */}
@@ -30,51 +31,44 @@ export default function SuccessPaymentPage() {
         </div>
 
         {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8"> */}
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Order Summary */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Order Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-muted-foreground"> Status </p>
-                    <p className="font-medium">{subscription?.status}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Plan</p>
-                    <p className="font-medium">{subscription?.plan}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Billing Cycle</p>
-                    <p className="font-medium">{subscription?.currentPeriodEnd}</p>
-                  </div>
-
+        {/* Main Content */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Order Summary */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                Order Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-muted-foreground"> Status </p>
+                  <p className="font-medium">{subscription?.status}</p>
                 </div>
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                    <p className="text-sm text-blue-800 dark:text-blue-200">
-                      <strong>Next billing date:</strong> {subscription?.currentPeriodEnd!.split('T')[0]}
-                    </p>
-                  </div>
-               <Button
-                onClick={handleManageSubscription}
-                variant="outline"
-                className="sm:w-auto w-full"
-              >
-                Manage Subscription
-              </Button>
-
-              </CardContent>
-            </Card>
-
-          </div>
+                <div>
+                  <p className="text-muted-foreground">Plan</p>
+                  <p className="font-medium">{subscription?.plan}</p>
+                </div>
+              </div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>Next billing date:</strong> {formatDateToText(subscription?.currentPeriodEnd!)}
+                </p>
+              </div>
+              <div className='flex items-center justify-center h-12'>
+                <Button
+                  onClick={handleManageSubscription}
+                  className="sm:w-auto w-full bg-green-500"
+                >
+                  Manage Subscription
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    // </div>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
-import { toast } from 'react-toastify';
 import { LoginUserValidator } from '@/classes/LoginUserValidator';
 import axios from '@/services/axios';
 import type { ApiResponse, LoginUserData } from '@/types/interfaces';
+import { toast } from 'react-toastify';
 
 // TODO : make this type secure
 export default async function postAuth(credentials: {
@@ -14,7 +14,6 @@ export default async function postAuth(credentials: {
     credentials.password,
   );
 
-  console.log('credentials', credentials);
   const errors = loginValidation.checkValidation();
   if (errors.length) {
     errors.forEach((error: string) => toast.error(error));
@@ -27,7 +26,6 @@ export default async function postAuth(credentials: {
       password: credentials.password,
     });
     const data = res.data as LoginUserData;
-    console.log('data', data);
 
     toast.success(data.message);
 
@@ -35,7 +33,6 @@ export default async function postAuth(credentials: {
   } catch (err: any) {
     const errors = [err.response.data.errors];
 
-    console.log('errorssrsrsrs', errors);
     errors.forEach((error: string) => toast.error(error));
     throw new Error(errors[0]);
   }

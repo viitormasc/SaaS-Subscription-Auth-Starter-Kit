@@ -10,7 +10,7 @@ export const useLogout = () => {
     mutationFn: requestLogoutApi,
     onSuccess: () => {
       queryClient.setQueryData(['activeUser'], null);
-      navigate('/');
+      navigate('/landing');
     },
     onError: (error) => {
       throw new Error(error.message);

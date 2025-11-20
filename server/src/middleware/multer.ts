@@ -1,22 +1,20 @@
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 
-export default multer({
-  storage: multer.diskStorage({}),
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(null, false);
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const tempDir = path.join(process.cwd(), 'temp-uploads');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
     }
-    // let ext = path.extname(file.originalname);
-    // if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
-    //   cb(null, false);
-    //   return;
-    // }
-    // cb(null, true);
+    cb(null, tempDir);
   },
-  limits: {
-    fileSize: 5 * 1024 * 1024,
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
   },
 });
+
+const upload = multer({ storage: storage });
+
+export default upload;

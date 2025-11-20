@@ -15,6 +15,8 @@ import SuccessPaymentPage from '@/pages/SuccessPaymentPage';
 import MainLayout from '../layouts/MainLayout';
 import Page404 from '../pages/Page404';
 import ProtectedRoute from './ProtectedRoute';
+import LegalPage from '@/pages/LegalPage';
+import PricingPageForGuest from '@/pages/PricingPageforGuest';
 const ReactRoutes = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -26,7 +28,17 @@ const ReactRoutes = () => {
         />
 
         <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/success" element={<SuccessPaymentPage />} />
+
+        <Route path="/pricing-guest" element={<PricingPageForGuest />} />
+
+        <Route path="/legalPage" element={<LegalPage />} />
+
+        <Route path="/" element={<Homepage />} />
+
+        <Route
+          path="/ChangeRecoverPasswordPage/:userId"
+          element={<ChangeRecoverPasswordPage />}
+        />
 
         <Route
           path="/RecoveryEmailValidationPage"
@@ -37,6 +49,7 @@ const ReactRoutes = () => {
         <Route element={<ProtectedRoute isClosed={true} />}>
           <Route path="/" element={<Homepage />} />
           <Route path="/editProfilePage" element={<EditProfilePage />} />
+          <Route path="/success" element={<SuccessPaymentPage />} />
         </Route>
       </Route>,
     ),

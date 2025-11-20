@@ -1,11 +1,9 @@
-import express = require("express");
-import { UserDocument } from "./interfaces"
+import express from 'express';
+import { UserDocument } from './interfaces';
 
 declare global {
   namespace Express {
-
     interface User extends UserDocument {}
-
     interface Request {
       flash(message?: string): { [key: string]: string[] };
       flash(event: string, message: string | string[]): any;
@@ -16,4 +14,3 @@ declare global {
   }
 }
 
-export = {};

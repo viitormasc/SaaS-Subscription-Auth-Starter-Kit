@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import DeleteAccountButton from './DeleteAccountAlertComponent';
 
@@ -19,7 +18,7 @@ export default function PrivacySecurityTab() {
           <Label className="text-foreground font-medium">
             Account Deletion
           </Label>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground ">
             Permanently delete your account and all data
           </p>
         </div>

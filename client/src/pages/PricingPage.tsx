@@ -1,4 +1,3 @@
-import PricingPageSkeleton from '@/components/PricingSkeleton';
 import SignUpDialog from '@/components/SignUpDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,6 @@ export default function PricingPage() {
   const [isAnnual, setIsAnnual] = useState(false);
   const {
     subscription,
-    isLoading,
     handlePlanSelect,
     handleManageSubscription,
     isCreatingCheckout,
@@ -26,7 +24,6 @@ export default function PricingPage() {
 
   const getButtonText = (planName: string) => {
     const currentPlan = subscription?.plan;
-    console.log('currentPlan', currentPlan);
 
     const planKey = planName.toLowerCase() as 'free' | 'standard' | 'pro';
     if (!currentPlan) {
@@ -69,16 +66,8 @@ export default function PricingPage() {
     return baseVariant;
   };
 
-  // if (isLoading) {
-  //   return <Spinner open />;
-  // }
-  //
-  if (isLoading) {
-    return <PricingPageSkeleton />;
-  }
-
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background py-22 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-12">
@@ -102,8 +91,9 @@ export default function PricingPage() {
               className="relative inline-flex h-6 w-11 items-center rounded-full bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               <span
-                className={`${isAnnual ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block h-4 w-4 transform rounded-full bg-primary transition-transform`}
+                className={`${
+                  isAnnual ? 'translate-x-6' : 'translate-x-1'
+                } inline-block h-4 w-4 transform rounded-full bg-primary transition-transform`}
               />
             </button>
             <span
@@ -120,27 +110,27 @@ export default function PricingPage() {
         {/* Manage Subscription Button for paid users */}
         {(subscription?.plan === 'standard' ||
           subscription?.plan === 'pro') && (
-            <div className="text-center mb-8">
-              <Button
-                onClick={handleManageSubscription}
-                variant="outline"
-                className="mb-4"
-              >
-                Manage Subscription
-              </Button>
-              <p className="text-sm text-muted-foreground">
-                Current plan:{' '}
-                <strong className="text-foreground">{subscription.plan}</strong>
-                {subscription.currentPeriodEnd && (
-                  <>
-                    {' '}
-                    • Renews on{' '}
-                    {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
-                  </>
-                )}
-              </p>
-            </div>
-          )}
+          <div className="text-center mb-8">
+            <Button
+              onClick={handleManageSubscription}
+              variant="outline"
+              className="mb-4"
+            >
+              Manage Subscription
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              Current plan:{' '}
+              <strong className="text-foreground">{subscription.plan}</strong>
+              {subscription.currentPeriodEnd && (
+                <>
+                  {' '}
+                  • Renews on{' '}
+                  {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+                </>
+              )}
+            </p>
+          </div>
+        )}
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
@@ -158,10 +148,11 @@ export default function PricingPage() {
             return (
               <Card
                 key={plan.name}
-                className={`relative border-2 transition-all duration-300 hover:scale-105 ${plan.popular && subscription?.plan !== 'pro'
-                  ? 'border-primary shadow-lg'
-                  : 'border-border'
-                  } ${isCurrentPlan ? 'ring-2 ring-primary ring-green-500' : ''}`}
+                className={`relative border-2 transition-all duration-300 hover:scale-105 ${
+                  plan.popular && subscription?.plan !== 'pro'
+                    ? 'border-primary shadow-lg'
+                    : 'border-border'
+                } ${isCurrentPlan ? 'ring-2 ring-primary ring-green-500' : ''}`}
               >
                 {/* Popular Badge */}
                 {plan.popular && subscription?.plan !== 'pro' && (
@@ -247,10 +238,11 @@ export default function PricingPage() {
                   {buttonText ? (
                     <Button
                       variant={buttonVariant}
-                      className={`w-full ${plan.popular && !isCurrentPlan
-                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                        : ''
-                        }`}
+                      className={`w-full bg-green-400 ${
+                        plan.popular && !isCurrentPlan
+                          ? 'bg-primary text-primary-foreground hover:bg-primary/90 '
+                          : ''
+                      }`}
                       onClick={() => handlePlanSelect(plan.name, isAnnual)}
                       disabled={isCreatingCheckout || isCurrentPlan}
                     >

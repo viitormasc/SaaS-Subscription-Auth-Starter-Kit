@@ -10,10 +10,11 @@ const UserSchema = new mongoose.Schema<UserDocument>({
   lastLogin: { type: Date, default: new Date() },
   source: { type: String, default: 'local' },
   profilePhoto: { type: String },
-  userPlan: { type: String, default: 'free' },
+  // userPlan: { type: String, default: 'free' },
   stripeCustomerId: { type: String },
-  subscriptionId: { type: String },
-  subscriptionStatus: { type: String },
+  // subscriptionId: { type: String },
+  // subscriptionStatus: { type: String },
+  // totalAmountPaid: { type: Number, default: 0 }
 })
 
 // Password hash middleware.

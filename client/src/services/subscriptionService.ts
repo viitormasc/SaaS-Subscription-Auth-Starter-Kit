@@ -15,6 +15,7 @@ export const subscriptionService = {
   // Get current subscription status
   async getSubscriptionStatus(): Promise<SubscriptionStatus> {
     const response = await axios.get<SubscriptionStatus>('/subscriptions/status');
+    console.log('response', response);
     return response.data;
   },
 

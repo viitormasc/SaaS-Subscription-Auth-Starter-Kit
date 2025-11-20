@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import type { NextFunction, Request, Response } from 'express';
 import cloudinary from '../middleware/cloudinary';
 import User from '../models/UserModel';
-dotenv.config();
+import fs, { mkdirSync } from 'fs';
+import path from 'path';
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   const userLoggedIn = req.user;
@@ -45,12 +46,38 @@ export const updateProfilePhoto = async (req: Request, res: Response, next: Next
     return;
   }
   try {
-    const cloudinaryResponse = await cloudinary.uploader.upload(file.path);
-    const imageUrl = cloudinaryResponse.secure_url;
+    const uploadsDir = path.join(process.cwd(), 'uploads', 'profile-photos');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    const fileExtension = path.extname(file.originalname);
+    console.log('fileExtension', fileExtension);
+    const acceptedFileExtensios = ['.png', '.jpg', '.jpeg', '.svg', '.webpg'];
+    if (!acceptedFileExtensios.includes(fileExtension)) {
+      res.status(400).json({ success: false, errors: 'Only accept image files' });
+      return;
+    }
+    const fileSize = file.size / (1024 * 1024);
+    if (fileSize > 10) {
+      res.status(400).json({ success: false, errors: 'File bigger than 10MB' });
+      return;
+    }
+    const fileName = `profile-${userId}-${Date.now()}${fileExtension}`;
+    const filePath = path.join(uploadsDir, fileName);
+    fs.renameSync(file.path, filePath);
+    const imageUrl = `${process.env.BACKEND_URL}/uploads/profile-photos/${fileName}`;
     const user = await User.findById(userId);
     if (!user) {
-      res.status(401).json({ success: false, message: 'User does not exist' });
+      fs.unlinkSync(filePath);
+      res.status(403).json({ success: false, message: 'User does not exist' });
       return;
+    }
+
+    if (user.profilePhoto && user.profilePhoto.startsWith('/uploads/profile-photos/')) {
+      const oldFilePath = path.join(process.cwd(), user.profilePhoto);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
     }
     user.profilePhoto = imageUrl;
     await user.save();
@@ -65,7 +92,7 @@ export const updateProfilePhoto = async (req: Request, res: Response, next: Next
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ success: false, errors: 'Internal error' });
-    throw new Error(error);
+    next(error);
   }
 };
 

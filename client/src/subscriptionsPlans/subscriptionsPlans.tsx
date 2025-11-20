@@ -19,6 +19,7 @@ const plans: PlansType[] = [
     annualPrice: 0,
     popular: false,
     features: [
+      'Ai coach to help motivate you!',
       'Unlimited track time for up to 2 activities',
       'Access dashboard data',
       'Track 1 activity at a time',
@@ -28,15 +29,14 @@ const plans: PlansType[] = [
     limitations: [
       'Cannot download dashboard data',
       'Cannot track more than 1 activity simultaneously',
-      'No help from AI',
     ],
     buttonVariant: 'outline' as const,
   },
   {
     name: 'Standard',
     description: 'The most popular choice for serious learners',
-    monthlyPrice: 4.99,
-    annualPrice: 3.99,
+    monthlyPrice: 5.99,
+    annualPrice: 4.99,
     annualSavings: 12,
     popular: true,
     features: [
@@ -54,14 +54,13 @@ const plans: PlansType[] = [
     name: 'Pro',
     description: 'Maximum productivity with AI power',
     monthlyPrice: 7.99,
-    annualPrice: 4.99,
-    annualSavings: 36,
+    annualPrice: 5.99,
+    annualSavings: 24,
     popular: false,
     features: [
       'Everything in Standard, plus:',
       'AI insights on your study patterns',
       'AI suggestions for improving results',
-      'Personalized study recommendations',
       'Early access to new features',
       '24/7 premium support',
     ],

@@ -990,7 +990,6 @@ If you have questions or need help:
 3. **Open an issue** on GitHub
 4. **Join our Discord** (coming soon)
 
----
 
 ## 🎯 What's Next?
 

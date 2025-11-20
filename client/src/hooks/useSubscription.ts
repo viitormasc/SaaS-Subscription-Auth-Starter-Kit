@@ -63,7 +63,6 @@ export const useCreatePortalSession = () => {
   return useMutation({
     mutationFn: subscriptionService.createPortalSession,
     onSuccess: (data) => {
-      console.log(data.url);
       window.location.href = data.url;
     },
     onError: (error: any) => {

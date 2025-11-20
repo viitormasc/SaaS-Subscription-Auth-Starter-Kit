@@ -20,6 +20,8 @@ route.post('/sendValidationCodeEmail', verifyCaptcha, authController.sendSignUpV
 
 route.put('/checkValidationCodeEmail', authController.checkValidationCodeEmail);
 
+route.put('/checkSignUpEmailCode', authController.checkSignupEmailValidationCode);
+
 route.post('/sendForgotPasswordEmail', verifyCaptcha, authController.sendForgotPasswordEmail);
 
 route.post('/resendForgotPasswordEmail/:id', authController.sendForgotPasswordEmail);

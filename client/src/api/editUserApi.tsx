@@ -1,6 +1,6 @@
-import { toast } from 'react-toastify';
 import axios from '@/services/axios';
 import type { ApiResponse, LoginUserData } from '@/types/interfaces';
+import { toast } from 'react-toastify';
 
 export default async function editUserApi(credentials: {
   firstName: string;
@@ -8,7 +8,6 @@ export default async function editUserApi(credentials: {
   profilePhoto: string;
 }) {
   const { firstName, lastName, profilePhoto } = credentials;
-  console.log('credentials', credentials);
   try {
     const res: ApiResponse = await axios.put('/api/user/updateUser', {
       firstName,
@@ -16,7 +15,6 @@ export default async function editUserApi(credentials: {
       profilePhoto,
     });
     const data = res.data as LoginUserData;
-    console.log('data', data);
 
     toast.success(data.message);
 

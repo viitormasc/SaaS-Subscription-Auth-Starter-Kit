@@ -1,9 +1,4 @@
-import { useId, useState, type ChangeEvent } from 'react';
-import Logo from './ui/logo';
 import { Button } from '@/components/ui/button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogContent,
@@ -16,9 +11,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { FcGoogle } from 'react-icons/fc';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useId, useState, type ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ForgotPasswordDialog from './ForgotPasswordDialog';
-import Spinner from './Spinner';
 import { ShowPasswordComponent } from './ShowPasswordComponent';
+import Spinner from './Spinner';
+import LogoNoName from './ui/LogoNoName';
 
 export default function LoginDialog() {
   const id = useId();
@@ -61,10 +62,10 @@ export default function LoginDialog() {
       <DialogContent>
         <div className="flex flex-col items-center gap-2">
           <div
-            className="flex size-11 shrink-0 items-center justify-center rounded-full"
+            className="flex  shrink-0 items-center justify-center rounded-full"
             aria-hidden="true"
           >
-            <Logo />
+            <LogoNoName className="scale-140 my-7" />
           </div>
           <DialogHeader>
             <DialogTitle className="sm:text-center">Welcome back</DialogTitle>
@@ -102,7 +103,10 @@ export default function LoginDialog() {
             </div>
           </div>
           <div className="flex justify-between gap-2">
-            <ShowPasswordComponent isChecked={isChecked} onCheckedChange={setIsChecked} />
+            <ShowPasswordComponent
+              isChecked={isChecked}
+              onCheckedChange={setIsChecked}
+            />
             <ForgotPasswordDialog />
           </div>
           <Button type="button" className="w-full" onClick={handleLogin}>
@@ -115,11 +119,11 @@ export default function LoginDialog() {
         </div>
 
         <Button
-          variant="destructive"
-          className="bg-red-400 text-white"
+          variant="outline"
+          className="dark:text-white"
           onClick={handleGoogleLogin}
         >
-          <FontAwesomeIcon icon={faGoogle} />
+          <FcGoogle />
           Login with Google
         </Button>
       </DialogContent>

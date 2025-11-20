@@ -1,9 +1,8 @@
-import { toast } from 'react-toastify';
 import axios from '@/services/axios';
 import type { ApiResponse, LoginUserData } from '@/types/interfaces';
+import { toast } from 'react-toastify';
 
 export default async function deleteAccountApi(captcha: string) {
-  console.log('captcha', captcha);
 
   if (!captcha) {
     toast.error('Please complete the captcha');

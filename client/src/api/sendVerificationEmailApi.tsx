@@ -1,8 +1,7 @@
-import { toast } from 'react-toastify';
 import { SignUpUserValidator } from '@/classes/SignUpValidator';
 import axios from '@/services/axios';
-import type { LoginUserData, SignUpCheckErrorsProps } from '@/types/interfaces';
-import type { ApiResponse } from '@/types/interfaces';
+import type { ApiResponse, LoginUserData, SignUpCheckErrorsProps } from '@/types/interfaces';
+import { toast } from 'react-toastify';
 
 export default async function sendVerificationEmailApi(
   credentials: SignUpCheckErrorsProps,
@@ -32,7 +31,6 @@ export default async function sendVerificationEmailApi(
     );
 
     const data = res.data as LoginUserData;
-    console.log('data', data);
     toast.success(data.message);
 
     return credentials;

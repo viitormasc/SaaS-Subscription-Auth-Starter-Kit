@@ -1,11 +1,10 @@
-import { toast } from 'react-toastify';
 import axios from '@/services/axios';
 import type { ApiResponse, LoginUserData } from '@/types/interfaces';
+import { toast } from 'react-toastify';
 
 export default async function sendProfilePhotoApi(file: File) {
   const formData = new FormData();
   formData.append('file', file);
-  console.log('formData', formData);
 
   try {
     const res: ApiResponse = await axios.put(
@@ -19,7 +18,6 @@ export default async function sendProfilePhotoApi(file: File) {
     );
 
     const data = res.data as LoginUserData;
-    console.log('data', data);
     toast.success(data.message);
     const user = data.user;
     return user?.profilePhoto;

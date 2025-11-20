@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -20,21 +21,18 @@ import Logo from './ui/logo';
 import UserDropdownMenu from './UserDropdownMenu';
 const UserLoggedInNavigationLinks = [
   { href: '/', label: 'Home' },
-  { href: '/dashboard', label: 'Dashboard' },
   { href: '/pricing', label: 'Pricing' },
 ];
 
 const noUserNavigationLinks = [
   { href: '/', label: 'Home' },
-  { href: '/pricing', label: 'Pricing' },
+  { href: '/pricing-guest', label: 'Pricing' },
 ];
 
 export default function Navbar() {
   const { data: user } = useActiveUser();
   const location = useLocation();
-  const prefetchPricing = usePrefetchPricing()
-
-
+  const prefetchPricing = usePrefetchPricing();
   const navigationLinks = user
     ? UserLoggedInNavigationLinks
     : noUserNavigationLinks;
@@ -43,7 +41,7 @@ export default function Navbar() {
     return location.pathname == href;
   };
   return (
-    <header className="w-[100%] fixed border-b px-4 md:px-6 shadow-sm z-[1000] bg-white dark:bg-[#0A0A0A] ">
+    <header className="w-[100%]  h-20 fixed  px-4 md:px-6  z-[1000] backdrop-blur-md">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -82,11 +80,18 @@ export default function Navbar() {
                 </svg>
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden" >
-              <NavigationMenu className="max-w-none *:w-full" >
-                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2" >
+            <PopoverContent
+              align="start"
+              className="w-36 p-1 md:hidden z-20000"
+            >
+              <NavigationMenu className="max-w-none *:w-full">
+                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full" onMouseOver={() => console.log('mouse enter')} >
+                    <NavigationMenuItem
+                      key={index}
+                      className="w-full"
+                      onMouseOver={() => console.log('mouse enter')}
+                    >
                       <NavigationMenuLink
                         href={link.href}
                         className="py-1.5"
@@ -102,9 +107,9 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="/" className="text-primary hover:text-primary/90">
-              <Logo />
-            </a>
+            <Link to="/" className="text-primary hover:text-primary/90">
+              <Logo className="mt-5" />
+            </Link>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
@@ -114,10 +119,10 @@ export default function Navbar() {
                       active={isActiveLink(link.href)}
                       href={link.href}
                       style={{ pointerEvents: 'auto' }}
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                      className="text-foreground hover:text-primary py-1.5 font-medium"
                       onMouseEnter={() => {
                         if (link.label == 'Pricing' && !isActiveLink(link.href))
-                          prefetchPricing()
+                          prefetchPricing();
                       }}
                     >
                       {link.label}
@@ -130,7 +135,7 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          {!user && <ToggleDarkModeButton />}
+          {!user && <ToggleDarkModeButton className="max-md:hidden" />}
           {!user && <LoginDialog />}
           {!user ? (
             <SignUpDialog />
@@ -141,6 +146,6 @@ export default function Navbar() {
           )}
         </div>
       </div>
-    </header >
+    </header>
   );
 }

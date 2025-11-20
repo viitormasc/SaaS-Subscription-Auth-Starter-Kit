@@ -1,0 +1,58 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+
+name: saas-starter-kit-dev 
+
+services:
+  mongo:
+    image: mongo:7.0.12
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    networks:
+        - caddy_net 
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: saas-starter-kit-server
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    ports:
+      - "2121:2121"
+    networks:
+        -caddy_net  
+    environment:
+      NODE_ENV: production
+    env_file: server/.env.dev
+    depends_on: 
+      - mongo
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: saas-starter-kit-frontend
+    restart: unless-stopped
+    networks:
+      - caddy_net  
+    env_file: client/.env
+    command: npm run dev -- --host
+    depends_on: 
+      - server 
+
+volumes:
+  mongo_data:
+networks:
+  caddy_net :
+    driver: bridge

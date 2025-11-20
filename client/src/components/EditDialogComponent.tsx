@@ -1,5 +1,3 @@
-import { useId, useState, type ChangeEvent } from 'react';
-import Logo from './ui/logo';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,17 +9,19 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from 'react-toastify';
-import Spinner from './Spinner';
-import { Pencil } from 'lucide-react';
 import { useEditCategory } from '@/hooks/useEditCategory';
 import type { CategoryDocument } from '@/types/interfaces';
+import { Pencil } from 'lucide-react';
+import { useId, useState, type ChangeEvent } from 'react';
+import { toast } from 'react-toastify';
+import Spinner from './Spinner';
+import Logo from './ui/logo';
 
 type EditDialogComponentProps = {
   category: CategoryDocument;
 };
 
-export default function EditDialogComponent({
+export default function EditCategoryDialogComponent({
   category,
 }: EditDialogComponentProps) {
   const id = useId();
@@ -29,6 +29,7 @@ export default function EditDialogComponent({
   const [openDialog, setOpenDialog] = useState(false);
   const [name, setName] = useState(category.name);
   const [goal, setGoal] = useState(category.dailyGoalMinutes);
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState('hours');
 
   const colors = [
     '#ef476f',
@@ -61,20 +62,20 @@ export default function EditDialogComponent({
       toast.error('Please choose a name and a goal time to create a category');
       return;
     }
-
     if (goalInput.value.match(/[a-z]/gi)) {
       toast.error('Goal should be a number');
-      setGoal('0');
       return;
     }
-    if (+goalInput.value > 12) {
+    const goalTime: number =
+      selectedTimeFrame == 'hours'
+        ? +goalInput.value.replace(/,/g, '.')
+        : +goalInput.value.replace(/,/g, '.') / 60;
+
+    if (goalTime > 12) {
       toast.error('Goal should be not more than 12 hours');
       return;
     }
-    const currentDailyGoalMinutes = String(
-      +goalInput.value.replace(/,/g, '.') * 60,
-    );
-
+    const currentDailyGoalMinutes = String(goalTime * 60);
     const categoryName = nameInput.value.trim();
     editCategory({
       name: categoryName,
@@ -111,32 +112,32 @@ export default function EditDialogComponent({
             </DialogDescription>
           </DialogHeader>
         </div>
-        <span>Color Theme</span>
-        <div className="flex justify-between">
-          {colors.map((color) => (
-            <button
-              id={color}
-              key={color}
-              className={`flex size-10 shrink-0 overflow-hidden rounded-full transition-transform hover:scale-110 themeColors`}
-              style={{ backgroundColor: color }}
-              onClick={(e) => {
-                e.preventDefault();
-                const selectedColor = document.getElementById(`${color}`);
-                const themeColorsOptions = Array.from(
-                  document.querySelectorAll('.themeColors'),
-                );
-
-                themeColorsOptions.forEach((color) =>
-                  color.classList.remove('colorClicked'),
-                );
-
-                selectedColor?.classList.add('colorClicked');
-
-                setColor(color);
-              }}
-            />
-          ))}
-        </div>
+        {/* <span>Color Theme</span> */}
+        {/* <div className="flex justify-between"> */}
+        {/*   {colors.map((color) => ( */}
+        {/*     <button */}
+        {/*       id={color} */}
+        {/*       key={color} */}
+        {/*       className={`flex size-10 shrink-0 overflow-hidden rounded-full transition-transform hover:scale-110 themeColors`} */}
+        {/*       style={{ backgroundColor: color }} */}
+        {/*       onClick={(e) => { */}
+        {/*         e.preventDefault(); */}
+        {/*         const selectedColor = document.getElementById(`${color}`); */}
+        {/*         const themeColorsOptions = Array.from( */}
+        {/*           document.querySelectorAll('.themeColors'), */}
+        {/*         ); */}
+        {/**/}
+        {/*         themeColorsOptions.forEach((color) => */}
+        {/*           color.classList.remove('colorClicked'), */}
+        {/*         ); */}
+        {/**/}
+        {/*         selectedColor?.classList.add('colorClicked'); */}
+        {/**/}
+        {/*         setColor(color); */}
+        {/*       }} */}
+        {/*     /> */}
+        {/*   ))} */}
+        {/* </div> */}
 
         <form className="space-y-5">
           <div className="space-y-4">
@@ -164,7 +165,7 @@ export default function EditDialogComponent({
                   if (value.match(/[A-Z]/gi)) {
                     e.target.value = e.target.value.replace(/[^0-9]/g, '');
                   }
-                  setGoal(value)
+                  setGoal(value);
                 }}
                 className="w-[10rem]"
                 inputMode="numeric"
@@ -172,7 +173,14 @@ export default function EditDialogComponent({
                 value={goal}
                 required
               />{' '}
-              <span> hours </span>
+              <select
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  setSelectedTimeFrame(e.target.value);
+                }}
+              >
+                <option value="hours"> Hours </option>
+                <option value="minutes"> Minutes </option>
+              </select>
             </div>
 
             <Button type="button" className="w-full" onClick={handleClick}>

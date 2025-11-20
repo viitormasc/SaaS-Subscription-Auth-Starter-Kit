@@ -12,13 +12,12 @@ export default async function validateSignUpCode(credentials: {
   captcha: string;
 }) {
   try {
-    const res: ApiResponse = await axios.put(
-      '/api/auth/checkValidationCodeEmail',
-      {
-        email: credentials.email.trim().toLowerCase(),
-        validationCode: credentials.validationCode,
-      },
-    );
+    const res: ApiResponse = await axios.put('/api/auth/checkSignUpEmailCode', {
+      email: credentials.email.trim().toLowerCase(),
+      validationCode: credentials.validationCode,
+      name: credentials.name,
+      password: credentials.password,
+    });
     const data = res.data as LoginUserData;
 
     toast.success(data.message);

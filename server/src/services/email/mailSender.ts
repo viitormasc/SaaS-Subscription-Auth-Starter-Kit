@@ -1,4 +1,3 @@
-process.loadEnvFile();
 import * as nodemailer from 'nodemailer';
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 const sesClient = new SESv2Client({
@@ -38,8 +37,6 @@ export async function sendEmail(mailProps: SendMailProps) {
     });
 
     console.log('Email sent successfully!');
-    console.log('Envelope:', response.envelope);
-    console.log('Message ID:', response.messageId);
     return response;
   } catch (error) {
     console.error('Error sending email:', error);

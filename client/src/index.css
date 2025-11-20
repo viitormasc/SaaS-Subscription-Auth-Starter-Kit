@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -17,37 +16,38 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(59.181% 0.17344 260.615);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: rgb(255, 255, 255);
+  --foreground: rgb(20, 10, 10);
+  --card: rgb(255, 255, 255);
+  --card-foreground: rgb(10, 10, 10);
+  --popover: rgb(255, 255, 255);
+  --popover-foreground: rgb(10, 10, 10);
+  --primary: rgb(50, 10, 200);
+  --primary-not-active-button: rgba(50, 10, 200,0.5);
+  --primary-foreground: rgb(250, 250, 250);
+  --secondary: rgb(245, 245, 245);
+  --secondary-foreground: rgb(23, 23, 23);
+  --muted: rgb(245, 245, 245);
+  --muted-foreground: rgb(115, 115, 115);
+  --accent: rgb(245, 245, 245);
+  --accent-foreground: rgb(23, 23, 23);
+  --destructive: rgb(231, 0, 11);
+  --border: rgb(229, 229, 229);
+  --input: rgb(229, 229, 229);
+  --ring: rgb(161, 161, 161);
+  --chart-1: rgb(245, 74, 0);
+  --chart-2: rgb(0, 150, 137);
+  --chart-3: rgb(16, 78, 100);
+  --chart-4: rgb(255, 186, 0);
+  --chart-5: rgb(253, 154, 0);
+  --sidebar: rgb(250, 250, 250);
+  --sidebar-foreground: rgb(10, 10, 10);
+  --sidebar-primary: rgb(23, 23, 23);
+  --sidebar-primary-foreground: rgb(250, 250, 250);
+  --sidebar-accent: rgb(245, 245, 245);
+  --sidebar-accent-foreground: rgb(23, 23, 23);
+  --sidebar-border: rgb(229, 229, 229);
+  --sidebar-ring: rgb(161, 161, 161);
 }
 
 /* a {
@@ -65,7 +65,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  pointer-events: auto !important; /* this make the google Recaptcha to work on dialogs, make it not close the dialog and be able to click on the images*/
+  pointer-events: auto !important;
+  /* this make the google Recaptcha to work on dialogs, make it not close the dialog and be able to click on the images*/
 }
 
 h1 {
@@ -83,9 +84,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: var(--border);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -95,7 +98,8 @@ button:focus-visible {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  margin: 0; /* Ensures no extra margin from the hidden elements */
+  margin: 0;
+  /* Ensures no extra margin from the hidden elements */
 }
 
 /* For Mozilla Firefox */
@@ -114,18 +118,21 @@ input[type='number'] {
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  /*   :root { */
+  /*     color: #213547; */
+  /*     background-color: #ffffff; */
+  /*   } */
+  /**/
+  /*   a:hover { */
+  /*     color: #747bff; */
+  /*   } */
+  /**/
+  /*   button { */
+  /*     background-color: #f9f9f9; */
+  /*   } */
 }
 
+/**/
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -165,43 +172,45 @@ input[type='number'] {
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(59.181% 0.17344 260.615);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: rgb(10, 10, 10);
+  --foreground: rgb(250, 250, 250);
+  --card: rgb(23, 23, 23);
+  --card-foreground: rgb(250, 250, 250);
+  --popover: rgb(23, 23, 23);
+  --popover-foreground: rgb(250, 250, 250);
+  --primary: rgb(50, 10, 200);
+  --primary-not-active-button: rgba(50, 10, 200, 0.5);
+  --primary-foreground: rgb(23, 23, 23);
+  --secondary: rgb(38, 38, 38);
+  --secondary-foreground: rgb(250, 250, 250);
+  --muted: rgb(38, 38, 38);
+  --muted-foreground: rgb(161, 161, 161);
+  --accent: rgb(38, 38, 38);
+  --accent-foreground: rgb(250, 250, 250);
+  --destructive: rgb(255, 100, 103);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: rgb(115, 115, 115);
+  --chart-1: rgb(20, 71, 230);
+  --chart-2: rgb(0, 188, 125);
+  --chart-3: rgb(253, 154, 0);
+  --chart-4: rgb(173, 70, 255);
+  --chart-5: rgb(255, 32, 86);
+  --sidebar: rgb(23, 23, 23);
+  --sidebar-foreground: rgb(250, 250, 250);
+  --sidebar-primary: rgb(20, 71, 230);
+  --sidebar-primary-foreground: rgb(250, 250, 250);
+  --sidebar-accent: rgb(38, 38, 38);
+  --sidebar-accent-foreground: rgb(250, 250, 250);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: rgb(115, 115, 115);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

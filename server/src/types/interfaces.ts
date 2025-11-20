@@ -25,6 +25,7 @@ export interface UserDocument extends mongoose.Document {
   stripeCustomerId?: string;
   subscriptionId?: string;
   subscriptionStatus?: string;
+  totalAmountPaid: number;
   comparePassword: (candidatePassword: string, cb: (err: Error | null, isMatch?: boolean) => void) => void;
 }
 
@@ -53,6 +54,7 @@ export interface StudyDataDocument extends mongoose.Document {
   lastHeartbeat: number;
   goalHitted: Boolean;
   goal: number;
+  GoalHittedNotificationSent: Boolean;
 }
 
 export interface GoogleProfile {
@@ -87,11 +89,9 @@ export interface validateSignup {
 export type ValidateChangePassword = Omit<validateSignup, 'validateEmail'>;
 
 export interface SubscriptionDocument {
-  stripeCostumerId: string
-  subscriptionId: string
+  stripeCostumerId: string;
+  subscriptionId: string;
   subscriptionStatus: string;
-  userId: mongoose.Schema.Types.ObjectId
-  expireDate: number
+  userId: mongoose.Schema.Types.ObjectId;
+  expireDate: number;
 }
-
-

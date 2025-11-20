@@ -9,7 +9,7 @@ import EmailValidation from '../models/EmailValidationModel';
 import User from '../models/UserModel';
 import sendValidationCode from '../services/email/SendValidationCode';
 import { EmailValidationCodeBody, ForgotPasswordParams, SignupBody, UserDocument } from '../types/interfaces';
-dotenv.config();
+import { frontEndUrl } from '../server';
 
 const senderEmail = `no-reply@${process.env.WEBSITE_DOMAIN}`;
 
@@ -17,6 +17,8 @@ export const sendSignUpValidationCodeEmail = async (req: Request<{}, any, Signup
   const { email, name, password, confirmPassword } = req.body ?? ({} as SignupBody);
   const signUpValidation = new SignUpUserValidator(email, password, confirmPassword);
   const errors = signUpValidation.checkValidation();
+
+  console.log('sending-email');
 
   if (errors.length) {
     return res.status(422).json({
@@ -27,46 +29,60 @@ export const sendSignUpValidationCodeEmail = async (req: Request<{}, any, Signup
   }
 
   const normalizedEmail = validator.normalizeEmail(email, { gmail_remove_dots: false }) || email;
+
   try {
     const existingUser = await User.findOne({ email: normalizedEmail }).lean();
     if (existingUser) {
-      res.status(409).json({
+      return res.status(409).json({
+        success: false,
         errors: 'User already exists',
       });
-      return;
     }
   } catch (error) {
-    res.status(500).json({ success: false, errors: 'Failed to verify email availability' });
-    return;
+    return res.status(500).json({
+      success: false,
+      errors: 'Failed to verify email availability',
+    });
   }
 
   try {
     const previousCode = await EmailValidation.find({ email: normalizedEmail });
-    if (previousCode) {
+    if (previousCode.length > 0) {
       await EmailValidation.deleteMany({ email: normalizedEmail });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      errors: 'Internal error deleting existing ones',
+      errors: 'Internal error deleting existing codes',
     });
-    return;
   }
-  const emailSentID = sendValidationCode(senderEmail, normalizedEmail);
 
-  if (!emailSentID) {
-    res.status(500).json({
+  try {
+    const emailSentID = await sendValidationCode(senderEmail, normalizedEmail);
+    console.log('emailSentID', emailSentID);
+
+    if (!emailSentID) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send validation email',
+        errors: 'Email service unavailable, please try again',
+      });
+    }
+
+    return res.status(200).json({
+      success: true, // Fixed typo
+      message: 'Validation code sent successfully',
+    });
+  } catch (error) {
+    console.error('Error sending validation email:', error);
+    return res.status(500).json({
       success: false,
       message: 'Failed to send validation email',
-      errors: 'Email service unavailable, please try again',
+      errors: 'An unexpected error occurred',
     });
-    return;
   }
-  res.status(200).json({ succes: true, message: 'Validation code sent successfully' });
-  return;
 };
-
 export const sendForgotPasswordEmail = async (req: Request<ForgotPasswordParams, any, SignupBody>, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const { email } = req.body;
@@ -130,12 +146,12 @@ export const sendForgotPasswordEmail = async (req: Request<ForgotPasswordParams,
 };
 
 export const checkValidationCodeEmail = async (req: Request<{}, any, EmailValidationCodeBody>, res: Response, next: NextFunction) => {
-  const { email, validationCode } = req.body ?? ({} as EmailValidationCodeBody);
+  let { email, validationCode } = req.body ?? ({} as EmailValidationCodeBody);
+  email = email.toLowerCase();
   if (!email || !validationCode) {
     res.status(400).json({ success: false, errors: 'Missing required fields' });
     return;
   }
-  console.log('body for validation', req.body);
   try {
     const dbValidationDocument = await EmailValidation.findOneAndUpdate({ email }, { $inc: { validationTries: 1 } });
     if (!dbValidationDocument) {
@@ -146,10 +162,10 @@ export const checkValidationCodeEmail = async (req: Request<{}, any, EmailValida
       return;
     }
 
-    dbValidationDocument.save();
+    await dbValidationDocument.save();
     if (dbValidationDocument.validationTries >= 5) {
       await dbValidationDocument.deleteOne({ email });
-      dbValidationDocument.save();
+      await dbValidationDocument.save();
       res.status(429).json({
         success: false,
         errors: 'Maximum validation attempts exceeded, please request a new code',
@@ -174,6 +190,50 @@ export const checkValidationCodeEmail = async (req: Request<{}, any, EmailValida
       message: 'Email validated successfully',
       userId,
     });
+    return;
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, errors: 'Internal server error' });
+    return;
+  }
+};
+
+export const checkSignupEmailValidationCode = async (req: Request<{}, any, EmailValidationCodeBody>, res: Response, next: NextFunction) => {
+  let { email, validationCode } = req.body ?? ({} as EmailValidationCodeBody);
+  email = email.toLowerCase();
+  if (!email || !validationCode) {
+    res.status(400).json({ success: false, errors: 'Missing required fields' });
+    return;
+  }
+  try {
+    const dbValidationDocument = await EmailValidation.findOneAndUpdate({ email }, { $inc: { validationTries: 1 } });
+    if (!dbValidationDocument) {
+      res.status(410).json({
+        success: false,
+        errors: 'The validation code has expired, please request another one',
+      });
+      return;
+    }
+
+    await dbValidationDocument.save();
+    if (dbValidationDocument.validationTries >= 5) {
+      await dbValidationDocument.deleteOne({ email });
+      await dbValidationDocument.save();
+      res.status(429).json({
+        success: false,
+        errors: 'Maximum validation attempts exceeded, please request a new code',
+      });
+      return;
+    }
+    if (dbValidationDocument.validationCode !== validationCode) {
+      res.status(401).json({
+        success: false,
+        errors: 'Invalid validation code',
+      });
+      return;
+    }
+
+    res.status(200).json({ success: true, message: 'Email succesfully validated' });
     return;
   } catch (error) {
     console.log(error);
@@ -217,7 +277,6 @@ export const postSignup = async (req: Request<{}, any, SignupBody>, res: Respons
 export const postLogin = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   const loginValidation = new LoginUserValidator(email, password);
-  console.log('loginValidation', loginValidation);
   const errors = loginValidation.checkValidation();
   if (errors.length) {
     console.log('errors');
@@ -237,7 +296,6 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         errors: info.message || 'Authentication failed',
       });
     }
-    console.log('usercontroller', user);
     req.logIn(user, (err) => {
       if (err) {
         return next(err);
@@ -246,7 +304,6 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         _id: user._id,
         email: user.email,
       };
-      console.log('userData', userData);
       // if you want the date in the right zone time you need to use .tostring() method, and the response will be the right time for your timezone
       user.lastLogin = Date.now();
       res.status(200).json({
@@ -270,7 +327,7 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
           success: false,
           message: 'Logout failed',
           errors: ['Failed to destroy session'],
-        })
+        });
       }
       // Clear the user object and send success response
       req.user = undefined;
@@ -292,7 +349,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
         success: false,
         message: 'User not found',
         errors: 'The requested user does not exist',
-        statusCode: 404
+        statusCode: 404,
       });
     }
     res.status(200).json({ success: true, message: 'User retrieved successfully', user: { _id, email, name, profilePhoto } });
@@ -308,8 +365,10 @@ export const googleAuth = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const googleAuthCallback = (req: Request, res: Response, next: NextFunction) => {
+  console.log('im here');
   passport.authenticate('google', (err: any, user: UserDocument, info: any) => {
     if (err) {
+      console.log(err);
       return next(err);
     }
     if (!user) {
@@ -322,7 +381,7 @@ export const googleAuthCallback = (req: Request, res: Response, next: NextFuncti
       if (err) {
         return next(err);
       }
-      return res.redirect(`${process.env.FRONT_END_URL}/`);
+      return res.redirect(frontEndUrl);
     });
   })(req, res, next);
 };

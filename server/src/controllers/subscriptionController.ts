@@ -1,9 +1,8 @@
-import dotenv from 'dotenv';
 import type { Request, Response } from 'express';
 import stripe from '../config/stripeConfig';
 import Subscription from '../models/SubscriptionModel';
 import User from '../models/UserModel';
-dotenv.config();
+import { frontEndUrl } from '../server';
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
   try {
@@ -16,14 +15,24 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     }
 
     let customerId = user.stripeCustomerId;
-
+    if (customerId) {
+      try {
+        const customer = await stripe.customers.retrieve(customerId);
+      } catch (error: any) {
+        if (error.code === 'resource_missing') {
+          customerId = undefined;
+        } else {
+          throw error;
+        }
+      }
+    }
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user.email,
         name: user.name,
         metadata: {
-          userId: userId.toString()
-        }
+          userId: userId.toString(),
+        },
       });
       customerId = customer.id;
       user.stripeCustomerId = customerId;
@@ -33,6 +42,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
+      allow_promotion_codes: true,
       line_items: [
         {
           price: priceId,
@@ -40,16 +50,16 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.FRONT_END_URL}/success`,
-      cancel_url: `${process.env.FRONT_END_URL}/pricing`,
+      success_url: `${frontEndUrl}/success?session_id=${customerId}`,
+      cancel_url: `${frontEndUrl}/pricing`,
       metadata: {
-        userId: userId.toString()
+        userId: userId.toString(),
       },
       subscription_data: {
         metadata: {
-          userId: userId.toString()
-        }
-      }
+          userId: userId.toString(),
+        },
+      },
     });
     res.status(200).json({ sucess: true, message: 'Checkout successfully created', sessionId: session.id, sessionUrl: session.url });
   } catch (error) {
@@ -60,12 +70,12 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
 export const getSubscriptionStatus = async (req: Request, res: Response) => {
   try {
-    const user = req.user
+    const user = req.user;
     if (!user) {
-      return res.status(401).json({ message: 'User not logged in' })
+      return res.status(401).json({ message: 'User not logged in' });
     }
     const userId = user.id;
-    const subscription = await Subscription.findOne({ userId })
+    const subscription = await Subscription.findOne({ userId, status: 'active' }).sort({ createdAt: -1 }).exec();
 
     if (!subscription) {
       return res.status(200).json({
@@ -74,7 +84,7 @@ export const getSubscriptionStatus = async (req: Request, res: Response) => {
         plan: 'free',
         status: 'active',
         currentPeriodEnd: null,
-        cancelAtPeriodEnd: false
+        cancelAtPeriodEnd: false,
       });
     }
 
@@ -83,7 +93,7 @@ export const getSubscriptionStatus = async (req: Request, res: Response) => {
       plan: subscription.plan,
       status: subscription.status,
       currentPeriodEnd: subscription.currentPeriodEnd,
-      cancelAtPeriodEnd: subscription.cancelAtPeriodEnd
+      cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
     });
   } catch (error) {
     console.error('Error getting subscription status:', error);
@@ -102,7 +112,7 @@ export const createPortalSession = async (req: Request, res: Response) => {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
-      return_url: `${process.env.FRONT_END_URL}/editProfilePage`,
+      return_url: `${frontEndUrl}/editProfilePage`,
     });
 
     res.json({ url: session.url });

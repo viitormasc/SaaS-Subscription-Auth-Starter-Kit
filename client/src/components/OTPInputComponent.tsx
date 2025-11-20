@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 interface OTPInputProps {
   onVerify: (otp: string) => Promise<void>;
   onResendEmail?: (e: React.FormEvent) => void;

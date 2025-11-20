@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsgo",
     "dev": "nodemon",
     "start": "node dist/server.js",
-    "build:start": "npm run build && npm start",
-    "clean": "rm -rf dist "
+    "clean": "rm -rf node_modules dist build coverage && npm cache clean --force",
+    "build:start": "npm run build && npm start"
   },
   "keywords": [],
   "author": "",
@@ -47,8 +47,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.893.0",
+    "@fastify/swagger": "^9.5.2",
+    "@sentry/node": "^10.23.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/connect-mongo": "^3.1.2",
+    "@types/csurf": "^1.11.5",
     "@types/express-flash": "^0.0.5",
     "@types/express-session": "^1.18.2",
     "@types/method-override": "^3.0.0",
@@ -65,6 +68,7 @@
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "csurf": "^1.11.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
@@ -76,6 +80,7 @@
     "mailgun.js": "^11.1.0",
     "method-override": "^3.0.0",
     "mongoose": "^8.17.1",
+    "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.6",
     "passport": "^0.7.0",
@@ -83,7 +88,9 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-google-oidc": "^0.1.0",
     "passport-local": "^1.0.0",
+    "qs": "^6.14.0",
     "stripe": "^19.1.0",
-    "validator": "^13.15.15"
+    "validator": "^13.15.15",
+    "winston": "^3.18.3"
   }
 }

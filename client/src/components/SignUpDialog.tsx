@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router';
 import {
   Dialog,
   DialogContent,
@@ -12,16 +13,23 @@ import { Label } from '@/components/ui/label';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { useSendVerificationEmail } from '@/hooks/useSendVerificationEmail';
 import { useSignUp } from '@/hooks/useSignUp';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FcGoogle } from 'react-icons/fc';
 import { useId, useState, type ChangeEvent } from 'react';
 import ReCaptcha from 'react-google-recaptcha';
 import { useNavigate } from 'react-router-dom';
 import Spinner from './Spinner';
 import Logo from './ui/logo';
 import SignUpCheckErrors from './ui/SignUpCheckErrors';
+import { toast } from 'react-toastify';
+import LogoNoName from './ui/LogoNoName';
 
-export default function SignUpDialog() {
+export default function SignUpDialog({
+  text,
+  className,
+}: {
+  text?: string;
+  className?: string;
+}) {
   const id = useId();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -30,6 +38,7 @@ export default function SignUpDialog() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [privacyChecked, setPrivacyChecked] = useState(false);
   const [captcha, setCaptcha] = useState('');
   const typePassword = isChecked ? 'text' : 'password';
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -43,7 +52,7 @@ export default function SignUpDialog() {
   );
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
-    console.log('captcha', captcha);
+
     sendVerificationEmail({ password, confirmPassword, email, name, captcha });
     if (isPending) return <Spinner open />;
     // signUp({ password, confirmPassword, email, name, captcha });
@@ -62,23 +71,32 @@ export default function SignUpDialog() {
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button className="hover:border-none shadow-none">Get Started</Button>
+        <Button className={`hover:border-none shadow-none ${className}`}>
+          {text ? text : 'Get Started'}
+        </Button>
       </DialogTrigger>
       <DialogContent>
-        <div className="flex flex-col items-center gap-2 my-[50px]">
+        <div className="flex flex-col items-center gap-2 mt-[60px]">
           <div
-            className="flex size-11 shrink-0 items-center justify-center rounded-full"
+            className="flex items-center justify-center rounded-full"
             aria-hidden="true"
           >
-            <Logo />
+            <LogoNoName className="scale-140 mb-8" />
           </div>
           <DialogHeader>
             <DialogTitle className="sm:text-center">Welcome!</DialogTitle>
             <DialogDescription className="sm:text-center">
-              Enter your data to create your account!
+              Lets start hitting your goals!
             </DialogDescription>
           </DialogHeader>
         </div>
+        <Button
+          variant="outline"
+          className=" dark:text-white"
+          onClick={handleGoogleSignUp}
+        >
+          <FcGoogle /> Sign up with Google
+        </Button>
 
         <form className="space-y-5">
           <div className="space-y-4">
@@ -142,6 +160,31 @@ export default function SignUpDialog() {
               <Label>Show password</Label>
             </div>
           </div>
+          <div className="flex justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="dark: bg-white"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setPrivacyChecked(e.target.checked)
+                }
+                checked={privacyChecked}
+              />
+              <Label>
+                {' '}
+                I agree with{' '}
+                <Link
+                  to="/legalPage"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cursor-pointer underline text-blue-400"
+                >
+                  privacy policy
+                </Link>
+              </Label>
+            </div>
+          </div>
+
           <SignUpCheckErrors
             email={email}
             password={password}
@@ -158,7 +201,12 @@ export default function SignUpDialog() {
             type="button"
             className="w-full dark:text-white"
             disabled={
-              !captcha || !email || !confirmPassword || !password || !name
+              !captcha ||
+              !email ||
+              !confirmPassword ||
+              !password ||
+              !name ||
+              !privacyChecked
             }
             onClick={handleSignUp}
           >
@@ -166,18 +214,9 @@ export default function SignUpDialog() {
           </Button>
         </form>
 
-        <div className="before:bg-border after:bg-border flex items-center gap-3 before:h-px before:flex-1 after:h-px after:flex-1">
-          <span className="text-muted-foreground text-xs">Or</span>
-        </div>
-
-        <Button
-          variant="destructive"
-          className="bg-red-400 text-white"
-          onClick={handleGoogleSignUp}
-        >
-          <FontAwesomeIcon icon={faGoogle} />
-          Sign up with Google
-        </Button>
+        {/* <div className="before:bg-border after:bg-border flex items-center gap-3 before:h-px before:flex-1 after:h-px after:flex-1"> */}
+        {/*   <span className="text-muted-foreground text-xs">Or</span> */}
+        {/* </div> */}
       </DialogContent>
     </Dialog>
   );

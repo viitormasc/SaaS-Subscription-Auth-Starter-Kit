@@ -241,7 +241,7 @@ export default function SubscriptionManagementTab() {
                   <CardFooter>
                     <Button
                       variant={buttonVariant}
-                      className={`w-full ${plan.popular
+                      className={`w-full bg-green-400 ${plan.popular
                         ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                         : ''
                         }`}
@@ -298,4 +298,3 @@ export default function SubscriptionManagementTab() {
     </div>
   );
 }
-

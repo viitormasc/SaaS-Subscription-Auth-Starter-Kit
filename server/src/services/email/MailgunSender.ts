@@ -1,4 +1,3 @@
-process.loadEnvFile();
 import FormData from 'form-data'; // form-data v4.0.1
 import Mailgun from 'mailgun.js'; // mailgun.js v11.1.0
 import { SendMailProps } from './mailSender';

@@ -1,5 +1,9 @@
-import type { SpinnerOverlayProps } from '@/types/types';
-import Logo from "./ui/logo";
+import logo from '../assets/CodeByVitor-withotu-bg.png';
+interface SpinnerOverlayProps {
+  open?: boolean;
+  message?: string;
+  size?: number;
+}
 
 export default function Spinner({
   open = true,
@@ -9,7 +13,6 @@ export default function Spinner({
   if (!open) return null;
 
   const ring = `${size}px`;
-  const inner = `${Math.max(size - 24, 40)}px`; // anel interno
 
   return (
     <div
@@ -19,38 +22,93 @@ export default function Spinner({
       aria-busy="true"
     >
       <div className="relative" style={{ width: ring, height: ring }}>
-        {/* Anel externo girando */}
+        <svg
+          className="absolute inset-0 animate-spin"
+          viewBox="0 0 100 100"
+          style={{ animationDuration: '1.5s' }}
+        >
+          <defs>
+            <linearGradient
+              id="ringPrimary"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="rgb(50, 10, 200)" stopOpacity="0.15" />{' '}
+              {/* lighter orange */}
+              <stop offset="50%" stopColor="rgb(50, 10, 200)" stopOpacity="0.8" />{' '}
+              {/* main orange */}
+              <stop offset="100%" stopColor="rgb(50, 10, 200)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="50"
+            cy="50"
+            r="46"
+            fill="none"
+            stroke="url(#ringPrimary)"
+            strokeWidth="8"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        <svg
+          className="absolute inset-0 animate-spin"
+          viewBox="0 0 100 100"
+          style={{ animationDuration: '2s', animationDirection: 'reverse' }}
+        >
+          <defs>
+            <linearGradient
+              id="ringSecondary"
+              x1="100%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="#FDBA74" stopOpacity="0.25" />{' '}
+              {/* peachy highlight */}
+              <stop offset="50%" stopColor="rgb(50, 10, 200)" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="rgb(50, 10, 200)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="50"
+            cy="50"
+            r="38"
+            fill="none"
+            stroke="url(#ringSecondary)"
+            strokeWidth="6"
+            strokeLinecap="round"
+          />
+        </svg>
+
         <div
-          className="absolute inset-0 rounded-full border-8 animate-spin"
-          style={{
-            borderColor: "rgba(67,56,202,0.35)", // indigo-600/35
-            borderTopColor: "#4338ca",           // indigo-600 sólido
-          }}
-        />
-        {/* Anel interno girando em velocidade diferente */}
-        <div
-          className="absolute rounded-full border-8 animate-spin"
-          style={{
-            top: 12,
-            left: 12,
-            right: 12,
-            bottom: 12,
-            borderColor: "rgba(67,56,202,0.2)",
-            borderRightColor: "transparent",
-            animationDuration: "2s",
-          }}
-        />
-        {/* Cápsula do logo no centro */}
+          className="absolute inset-0 animate-spin"
+          style={{ animationDuration: '3s' }}
+        >
+          <div className="absolute top-0 left-1/2 w-3 h-3 -ml-1.5 rounded-full bg-blue-400 shadow-lg shadow-blue-500/40 animate-pulse" />
+          <div
+            className="absolute top-1/2 right-0 w-3 h-3 -mt-1.5 rounded-full bg-white shadow-lg shadow-white/40 animate-pulse"
+            style={{ animationDelay: '0.5s' }}
+          />
+        </div>
+
         <div className="absolute inset-0 grid place-items-center">
-          <div className="rounded-full bg-white/95 shadow-xl p-4">
-            {/* Ajuste o tamanho do logo conforme precisar */}
-            <Logo className="h-10 w-auto" />
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400/20 to-white/10 blur-xl animate-pulse" />
+
+            <div className="relative rounded-full  shadow-2xl p-5 backdrop-blur-sm border border-white/10 dark:border-zinc-700/30">
+              <img src={logo} />
+            </div>
           </div>
         </div>
       </div>
 
       {message && (
-        <p className="mt-6 text-sm text-white/90 select-none">{message}</p>
+        <p className="mt-8 text-sm font-medium text-white/90 select-none animate-pulse">
+          {message}
+        </p>
       )}
     </div>
   );

@@ -1,8 +1,12 @@
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { useState } from 'react';
 
 export default function NotificationsComponentTab() {
-
+  const initialPermission =
+    Notification.permission === 'granted' ? true : false;
+  const [notificationsPermission, setNotificationsPermission] =
+    useState(initialPermission);
   return (
     <div className="space-y-6">
       <div>
@@ -24,16 +28,17 @@ export default function NotificationsComponentTab() {
               Enable Notifications
             </Label>
             <p className="text-sm text-muted-foreground">
-              Receive notifications about your study progress and
-              achievements
+              Receive notifications about your study progress and achievements
             </p>
           </div>
           <Switch
             id="notifications"
-            defaultChecked
-            onCheckedChange={(checked) =>
-              console.log('Email notifications:', checked)
-            }
+            checked={notificationsPermission}
+            onCheckedChange={() => {
+              alert(
+                `Notifications are ${Notification.permission}. To change this, please go to your browser settings`,
+              );
+            }}
           />
         </div>
 
@@ -48,13 +53,12 @@ export default function NotificationsComponentTab() {
           </div>
           <Switch
             defaultChecked
-            onCheckedChange={(checked) =>
-              console.log('Email notifications:', checked)
-            }
+            onCheckedChange={(checked) => {
+              console.log('Email notifications:', checked);
+            }}
           />
         </div>
       </div>
     </div>
   );
 }
-

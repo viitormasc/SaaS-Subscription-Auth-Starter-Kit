@@ -38,10 +38,8 @@ export default function ProfileInformationTab() {
     e.preventDefault();
     const files = e.target.files;
     if (!files) return;
-    console.log('files', files);
     if (files.length > 0) {
       const file = files[0];
-      console.log('file', file);
 
       if (file.size > 5 * 1024 * 1024) {
         toast.error('File size must be less than 5MB');
@@ -60,10 +58,11 @@ export default function ProfileInformationTab() {
     fileInputRef.current?.click();
   }
 
-  function handlePhotoClick() { }
+  function handlePhotoClick() {
+    fileInputRef.current?.click();
+  }
   function handleProfileUpdate(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    console.log('handelign');
     updateUser({
       firstName: newFirstName as string,
       lastName: newLastName as string,
@@ -72,7 +71,6 @@ export default function ProfileInformationTab() {
 
     if (updatePending) return <Spinner open />;
   }
-
   return (
     <div className="space-y-6">
       <div>

@@ -4,15 +4,12 @@ import { PassportStatic, serializeUser } from 'passport';
 import type { DoneFunction } from '../types/types';
 import { UserDocument, GoogleProfile } from '../types/interfaces';
 import GoogleStrategy from 'passport-google-oidc';
-import dotenv from 'dotenv';
 import userServiceFactory from '../user/user.service'; // Import UserService factory
-
-dotenv.config();
 
 export default function (passport: PassportStatic) {
   // Initialize UserService with the User model
   const UserService = userServiceFactory(User);
-
+  console.log(process.env.CALLBACK_URL);
   const options: IStrategyOptions = {
     usernameField: 'email',
     passReqToCallback: false,
@@ -68,7 +65,6 @@ export default function (passport: PassportStatic) {
       try {
         console.log('email', email.toLowerCase());
         const user = await User.findOne({ email: email.toLowerCase() });
-        console.log('user', user);
 
         if (!user) {
           return done(null, false, { message: 'Invalid email or password.' });

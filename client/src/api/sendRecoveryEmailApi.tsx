@@ -1,8 +1,6 @@
-import { toast } from 'react-toastify';
-import { SignUpUserValidator } from '@/classes/SignUpValidator';
 import axios from '@/services/axios';
-import type { EmailSentData, SendRecoveryEmailProps } from '@/types/interfaces';
-import type { ApiResponse } from '@/types/interfaces';
+import type { ApiResponse, EmailSentData, SendRecoveryEmailProps } from '@/types/interfaces';
+import { toast } from 'react-toastify';
 
 export default async function sendRecoveryEmailApi(
   credentials: SendRecoveryEmailProps,
@@ -20,7 +18,6 @@ export default async function sendRecoveryEmailApi(
     const data = res.data as EmailSentData;
     toast.success(data.message);
     const id = data.emailSentID;
-    console.log(id);
     credentials.id = id;
     return credentials;
   } catch (err: any) {

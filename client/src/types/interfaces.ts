@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
 export interface UserDocument {
   _id: string;
@@ -9,7 +9,12 @@ export interface UserDocument {
 }
 
 export interface ApiResponse {
-  data: LoginUserData | CategoryApiData | TimerApiData | AllTimersApiData;
+  data:
+    | LoginUserData
+    | CategoryApiData
+    | TimerApiData
+    | AllTimersApiData
+    | AIApiData;
   status: number;
 }
 
@@ -54,9 +59,12 @@ export interface ChangePasswordApiProps {
   confirmPassword: string;
   userId: string;
 }
-export type ChangeUserLoggedInPassProps = Omit<ChangePasswordApiProps, 'userId'> & {
+export type ChangeUserLoggedInPassProps = Omit<
+  ChangePasswordApiProps,
+  'userId'
+> & {
   currentPassword: string;
-}
+};
 export interface SignUpCheckErrorsProps {
   password: string;
   confirmPassword: string;
@@ -111,7 +119,8 @@ export interface TimerDocument {
   stopTimeStamps: number[];
   isRunning: boolean;
   goalHitted: boolean;
-  __v: number;
+  GoalHittedNotificationSent: boolean;
+  lastHeartbeat: number;
 }
 
 export interface TimerApiData {
@@ -152,7 +161,7 @@ export interface ThemeContextType {
   theme: string;
   toggleTheme?: () => void;
   checked: boolean;
-  setChecked?: React.Dispatch<React.SetStateAction<boolean>>
+  setChecked?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ChildrenProps {
@@ -178,4 +187,41 @@ export interface PortalSessionResponse {
 export interface CreateCheckoutSessionParams {
   priceId: string;
   isAnnual: boolean;
+}
+
+export interface AIMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  metrics?: {
+    streak?: number;
+    consistency?: number;
+    totalStudyTime?: number;
+  };
+}
+
+export interface QuickPrompt {
+  id: string;
+  text: string;
+  icon: string;
+  category: string;
+}
+
+export interface ChatState {
+  isOpen: boolean;
+  isMinimized: boolean;
+  isLoading: boolean;
+  messages: AIMessage[];
+  quickPrompts: QuickPrompt[];
+}
+
+export interface AIApiData {
+  success: boolean;
+  message: string;
+  metrics: {
+    streak: number;
+    consistency: number;
+    totalStudyTime: number;
+  };
 }

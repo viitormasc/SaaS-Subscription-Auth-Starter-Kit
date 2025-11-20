@@ -5,11 +5,17 @@ import ThemeContext from '@/utils/ThemeProvider';
 import { useContext } from 'react';
 import type { ThemeContextType } from '@/types/interfaces';
 
-export default function ToggleDarkModeButton() {
-  const { theme, toggleTheme, checked } = useContext(ThemeContext) as ThemeContextType;
+export default function ToggleDarkModeButton({
+  className,
+}: {
+  className?: string;
+}) {
+  const { theme, toggleTheme, checked } = useContext(
+    ThemeContext,
+  ) as ThemeContextType;
   const id = useId();
   if (!toggleTheme) {
-    return
+    return;
   }
   const handleMoonClick = () => {
     if (theme !== 'dark') {
@@ -25,7 +31,7 @@ export default function ToggleDarkModeButton() {
 
   return (
     <div
-      className="group inline-flex items-center gap-2"
+      className={`group inline-flex items-center gap-2 ${className}`}
       data-state={checked ? 'checked' : 'unchecked'}
     >
       <span
