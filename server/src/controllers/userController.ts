@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import type { NextFunction, Request, Response } from 'express';
-import cloudinary from '../middleware/cloudinary';
 import User from '../models/UserModel';
 import fs, { mkdirSync } from 'fs';
 import path from 'path';

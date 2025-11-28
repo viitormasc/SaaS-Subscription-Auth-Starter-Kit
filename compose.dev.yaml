@@ -8,7 +8,7 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 
-name: saas-starter-kit-dev 
+name: solar-project-ai-dev 
 
 services:
   mongo:
@@ -23,7 +23,7 @@ services:
     build: 
       context: ./server
       dockerfile: Dockerfile
-    container_name: saas-starter-kit-server
+    container_name: solar-project-ai-server
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
@@ -31,7 +31,7 @@ services:
     ports:
       - "2121:2121"
     networks:
-        -caddy_net  
+      - caddy_net  
     environment:
       NODE_ENV: production
     env_file: server/.env.dev
@@ -42,11 +42,11 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    container_name: saas-starter-kit-frontend
+    container_name: solar-project-ai-frontend
     restart: unless-stopped
     networks:
       - caddy_net  
-    env_file: client/.env
+    env_file: client/.env.development
     command: npm run dev -- --host
     depends_on: 
       - server 

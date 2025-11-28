@@ -2,11 +2,11 @@
     local_certs
 }
 
-auth.localhost {
+solar.localhost {
     encode gzip
     reverse_proxy frontend:5173
 }
 
-api.auth.localhost {
+api.solar.localhost {
     reverse_proxy server:2121
 }
