@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+
+ARG NODE_VERSION=22.19.0
+FROM node:${NODE_VERSION}-alpine AS builder
+
+WORKDIR /usr/src/app
+
+# Copy package files and install all deps (including dev)
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+
+# CMD ["npm","run","dev"]

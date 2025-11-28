@@ -22,7 +22,7 @@ services:
   server:
     build: 
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: solar-project-ai-server
     volumes:
       - ./server:/usr/src/app
@@ -33,7 +33,7 @@ services:
     networks:
       - caddy_net  
     environment:
-      NODE_ENV: production
+      NODE_ENV: develeopment 
     env_file: server/.env.dev
     depends_on: 
       - mongo
@@ -41,9 +41,11 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: solar-project-ai-frontend
     restart: unless-stopped
+    ports:
+      - "5173:5173"
     networks:
       - caddy_net  
     env_file: client/.env.development
